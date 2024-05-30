@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
 
     return res.status(201).json({ token });
   } catch (err) {
-    console.log("Error signing up: ", err);
+    console.log("Error registering user: ", err);
     return res.status(500).json({ error: err.message });
   }
 };
@@ -56,17 +56,17 @@ exports.login = async (req, res) => {
 
     return res.status(200).json({ token });
   } catch (err) {
-    console.log("Error in loging in: ", err);
+    console.log("Error logging in: ", err);
     return res.status(500).json({ error: err.message });
   }
 };
 
 exports.profile = async (req, res) => {
   try {
-      const user = await User.findByPk(req.user.id);
-      res.status(200).json(user);
+    const user = await User.findByPk(req.user.id);
+    return res.status(200).json(user);
   } catch (err) {
-      console.log("Error in getting profile: ",err)
-      return res.status(500).json({ error: err.message });
+    console.log("Error getting profile: ", err);
+    return res.status(500).json({ error: err.message });
   }
 };

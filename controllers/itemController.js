@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const Item = require('../models/item');
+const Item = require('../models/Item');
 const Notification = require('../models/Notification');
 const Bid = require('../models/Bid');
 const User = require('../models/User');
@@ -22,7 +22,7 @@ exports.getItemById = async (req, res) => {
     }
     return res.status(200).json(item);
   } catch (err) {
-    console.log("Error getting item: ", err);
+    console.log("Error getting item by Id: ", err);
     return res.status(500).json({ error: err.message });
   }
 };

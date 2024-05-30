@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/db');
 
-const Item = sequelize.define('Item', {
+const Item = sequelize.define('item', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -21,10 +21,11 @@ const Item = sequelize.define('Item', {
     },
     current_price: {
         type: DataTypes.DECIMAL,
-        defaultValue: 0,
+        defaultValue: 0.0,
     },
     image_url: {
         type: DataTypes.STRING,
+        allowNull: true,
     },
     end_time: {
         type: DataTypes.DATE,
@@ -36,7 +37,6 @@ const Item = sequelize.define('Item', {
     },
     }, {
     timestamps: false,
-    tableName: 'items',
 });
 
 module.exports = Item;

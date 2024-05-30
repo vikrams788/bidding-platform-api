@@ -3,7 +3,7 @@ const sequelize = require('../utils/db');
 const Item = require('./Item');
 const User = require('./User');
 
-const Bid = sequelize.define('Bid', {
+const Bid = sequelize.define('bid', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -11,7 +11,6 @@ const Bid = sequelize.define('Bid', {
     },
     item_id: {
         type: DataTypes.UUID,
-        allowNull: false,
         references: {
         model: Item,
         key: 'id',
@@ -19,7 +18,6 @@ const Bid = sequelize.define('Bid', {
     },
     user_id: {
         type: DataTypes.UUID,
-        allowNull: false,
         references: {
         model: User,
         key: 'id',
@@ -35,7 +33,6 @@ const Bid = sequelize.define('Bid', {
     },
     }, {
     timestamps: false,
-    tableName: 'bids',
 });
 
 module.exports = Bid;

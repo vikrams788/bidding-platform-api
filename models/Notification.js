@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../utils/db');
 const User = require('./User');
 
-const Notification = sequelize.define('Notification', {
+const Notification = sequelize.define('notification', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -10,7 +10,6 @@ const Notification = sequelize.define('Notification', {
     },
     user_id: {
         type: DataTypes.UUID,
-        allowNull: false,
         references: {
         model: User,
         key: 'id',
@@ -30,7 +29,6 @@ const Notification = sequelize.define('Notification', {
     },
     }, {
     timestamps: false,
-    tableName: 'notifications',
 });
 
 module.exports = Notification;
