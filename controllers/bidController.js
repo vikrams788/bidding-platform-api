@@ -4,6 +4,7 @@ const Item = require('../models/Item');
 const Notification = require('../models/Notification');
 const User = require('../models/User');
 const { io } = require('../index');
+const { Op } = require('sequelize');
 
 exports.getAllBids = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ exports.getAllBids = async (req, res) => {
   }
 };
 
-exports.placeBid = async (req, res) => {
+exports.placeBid = async (req, res, io) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -43,15 +44,29 @@ exports.placeBid = async (req, res) => {
 
     await item.update({ current_price: bid_amount });
 
-    // Notify item owner
-    const itemOwner = await User.findByPk(item.user_id);
-    if (itemOwner) {
+    await Notification.create({
+      user_id: userId,
+      message: `Congratulations, you are now the highest bidder on "${item.name}" with a bid of $${bid_amount}.`,
+    });
+
+    io.to(userId).emit('notify', `Congratulations, you are now the highest bidder on "${item.name}" with a bid of $${bid_amount}.`);
+
+    const previousBidders = await Bid.findAll({
+      where: {
+        item_id: itemId,
+        user_id: {
+          [Op.ne]: userId,
+        },
+      },
+    });
+
+    for (const bid of previousBidders) {
       await Notification.create({
-        user_id: itemOwner.id,
-        message: `Your item "${item.name}" has a new bid of $${bid_amount}.`,
+        user_id: bid.user_id,
+        message: `You have been outbid on "${item.name}" with a bid of $${bid_amount}.`,
       });
 
-      io.to(itemOwner.id).emit('notify', `Your item "${item.name}" has a new bid of $${bid_amount}.`);
+      io.to(bid.user_id).emit('notify', `You have been outbid on "${item.name}" with a bid of $${bid_amount}.`);
     }
 
     return res.status(201).json(bid);

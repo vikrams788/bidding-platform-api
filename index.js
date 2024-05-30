@@ -39,7 +39,7 @@ app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
-app.use('/api/bids', bidRoutes);
+app.use('/api/bids', bidRoutes(io));
 app.use('/api/notifications', notificationRoutes);
 
 io.on('connection', (socket) => {

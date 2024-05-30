@@ -2,12 +2,16 @@ const express = require('express');
 const { check } = require('express-validator');
 const bidController = require('../controllers/bidController');
 const authMiddleware = require('../middleware/authMiddleware');
+const { placeBid } = require('../controllers/bidController');
 const router = express.Router();
 
-router.get('/:itemId/bids', authMiddleware, bidController.getAllBids);
+module.exports = (io) => {
 
-router.post('/:itemId/bids', authMiddleware, [
-    check('bid_amount', 'Bid amount is required').isDecimal(),
-], bidController.placeBid);
+    router.get('/:itemId/bids', authMiddleware, bidController.getAllBids);
 
-module.exports = router;
+    router.post('/:itemId/bids', authMiddleware, [
+        check('bid_amount', 'Bid amount is required').isDecimal(),
+    ], (req, res) => placeBid(req, res, io));
+    
+    return router;
+};  
